@@ -1,0 +1,13 @@
+<form [formGroup]="formulario">
+  <label>Año</label>
+  <input type="text" formControlName="year" />
+  <label>Modelo</label>
+  <input type="text" formControlName="modelo" />
+  <label>Marca</label>
+  <select formControlName="catMarcaId">
+    @for (marca of marcas(); track marca.id) {
+      <option [ngValue]="marca.id">{{ marca.marca }}</option>
+    }
+  </select>
+  <button type="button" (click)="editarVehiculo()">Guardar</button>
+</form>

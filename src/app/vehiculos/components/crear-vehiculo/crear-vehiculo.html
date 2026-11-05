@@ -1,0 +1,154 @@
+<div class="page-container">
+  <!-- Barra superior -->
+  <header class="header-nav">
+    <div class="nav-content">
+      <a mat-button routerLink="/lista-vehiculos" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Catálogo
+      </a>
+      <span class="nav-badge">Nuevo Registro</span>
+    </div>
+  </header>
+
+  <main class="content-wrapper">
+    <div class="form-layout">
+      <!-- Tarjeta Principal del Formulario -->
+      <mat-card class="form-card" appearance="outlined">
+        <mat-card-header>
+          <div mat-card-avatar class="card-avatar">
+            <mat-icon>add_circle</mat-icon>
+          </div>
+          <mat-card-title>Registrar Nuevo Vehículo</mat-card-title>
+          <mat-card-subtitle>Completa los datos del vehículo para agregarlo al sistema</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-content class="card-content">
+          <form [formGroup]="formulario" class="form-body">
+            <!-- Campo Año -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Año del Vehículo</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="year"
+                placeholder="Ej. 2024"
+              />
+              <mat-icon matPrefix>calendar_today</mat-icon>
+              @if (formulario.get('year')?.hasError('required') && formulario.get('year')?.touched) {
+                <mat-error>El año es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Campo Modelo -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Modelo del Vehículo</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="modelo"
+                placeholder="Ej. Civic Turbo, Mustang GT, Corolla"
+              />
+              <mat-icon matPrefix>directions_car</mat-icon>
+              @if (formulario.get('modelo')?.hasError('required') && formulario.get('modelo')?.touched) {
+                <mat-error>El modelo es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Campo Marca -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Marca</mat-label>
+              <mat-select formControlName="catMarcaId" placeholder="Selecciona una marca">
+                <mat-option [value]="0" disabled>-- Selecciona una marca --</mat-option>
+                @for (marca of marcas(); track marca.id) {
+                  <mat-option [value]="marca.id">{{ marca.marca }}</mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>branding_watermark</mat-icon>
+              @if (formulario.get('catMarcaId')?.touched && (formulario.get('catMarcaId')?.value === 0 || formulario.get('catMarcaId')?.hasError('required'))) {
+                <mat-error>Por favor selecciona una marca válida</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Acciones -->
+            <div class="form-actions">
+              <button
+                type="button"
+                mat-flat-button
+                color="primary"
+                (click)="guardarVehiculo()"
+                [disabled]="guardando()"
+                class="submit-btn"
+              >
+                <mat-icon>save</mat-icon>
+                <span>{{ guardando() ? 'Guardando...' : 'Guardar Vehículo' }}</span>
+              </button>
+
+              <a
+                mat-stroked-button
+                routerLink="/lista-vehiculos"
+                [disabled]="guardando()"
+                class="cancel-btn"
+              >
+                <mat-icon>close</mat-icon>
+                Cancelar
+              </a>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Panel Lateral de Previsualización y Galería de Modelos -->
+      <div class="preview-panel">
+        <mat-card class="preview-card" appearance="outlined">
+          <div class="preview-header">
+            <span class="preview-tag">Foto de Exhibición</span>
+            <span class="preview-caption">Inspiración de Diseño</span>
+          </div>
+
+          <div class="featured-image-wrapper">
+            <img
+              [src]="imagenSeleccionada()"
+              alt="Vehículo seleccionado"
+              class="featured-preview-img"
+            />
+          </div>
+
+          <mat-card-content class="preview-content">
+            <h4>Colección de Inspiración</h4>
+            <p>Selecciona una imagen para previsualizar diferentes acabados y tipos de carrocería:</p>
+
+            <div class="picker-thumbnails">
+              @for (img of imagenes; track $index) {
+                <button
+                  type="button"
+                  class="picker-thumb"
+                  [class.active]="imagenSeleccionada() === img"
+                  (click)="seleccionarImagen(img)"
+                >
+                  <img [src]="img" alt="Miniatura {{ $index + 1 }}" loading="lazy" />
+                </button>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Galería horizontal inferior -->
+    <section class="gallery-strip">
+      <div class="strip-title">
+        <mat-icon>collections</mat-icon>
+        <h3>Modelos de Referencia</h3>
+      </div>
+      <div class="strip-grid">
+        @for (img of imagenes; track $index) {
+          <div class="strip-item" (click)="seleccionarImagen(img)">
+            <img [src]="img" alt="Referencia {{$index + 1}}" loading="lazy" />
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+</div>

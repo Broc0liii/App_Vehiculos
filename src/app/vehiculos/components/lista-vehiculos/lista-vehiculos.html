@@ -1,0 +1,175 @@
+<div class="page-container">
+  <!-- Barra superior / Header -->
+  <mat-toolbar color="primary" class="main-toolbar">
+    <div class="toolbar-content">
+      <div class="brand-group">
+        <mat-icon class="brand-icon">directions_car</mat-icon>
+        <span class="toolbar-title">App Vehículos</span>
+      </div>
+      <div class="toolbar-actions">
+        <a mat-flat-button class="create-btn" routerLink="/crear-vehiculo">
+          <mat-icon>add</mat-icon>
+          Nuevo Vehículo
+        </a>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <!-- Hero Banner con galería de autos -->
+  <section class="hero-banner">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-badge">Catálogo Exclusivo</span>
+      <h1 class="hero-title">Gestión y Galería de Vehículos</h1>
+      <p class="hero-subtitle">
+        Administra tus vehículos registrados y visualiza los modelos más destacados de nuestra colección.
+      </p>
+
+      <!-- Mini tira de previsualización con las imágenes solicitadas -->
+      <div class="hero-thumbnails">
+        @for (img of imagenes; track $index) {
+          <div class="thumb-item">
+            <img [src]="img" alt="Auto miniatura" loading="lazy" />
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenedor Principal de Contenido -->
+  <main class="content-wrapper">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Vehículos Registrados</h2>
+        <p class="section-subtitle">
+          Listado completo en el sistema
+        </p>
+      </div>
+
+      <div class="stats-badge">
+        <mat-icon>format_list_bulleted</mat-icon>
+        <span>Total: <strong>{{ listaVehiculos().length }}</strong></span>
+      </div>
+    </div>
+
+    <mat-divider class="section-divider"></mat-divider>
+
+    <!-- Estado de carga -->
+    @if (cargando()) {
+      <div class="loading-state">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Cargando vehículos...</p>
+      </div>
+    }
+
+    <!-- Estado vacío -->
+    @if (!cargando() && listaVehiculos().length === 0) {
+      <div class="empty-state">
+        <div class="empty-card">
+          <img [src]="imagenes[0]" alt="Sin vehículos" class="empty-img" />
+          <div class="empty-details">
+            <mat-icon class="empty-icon">car_repair</mat-icon>
+            <h3>Aún no hay vehículos registrados</h3>
+            <p>Comienza agregando tu primer modelo a la base de datos.</p>
+            <a mat-flat-button color="primary" routerLink="/crear-vehiculo">
+              <mat-icon>add</mat-icon>
+              Registrar Primer Vehículo
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Cuadrícula de Vehículos con Angular Material Cards -->
+    @if (!cargando() && listaVehiculos().length > 0) {
+      <div class="vehicles-grid">
+        @for (vehiculo of listaVehiculos(); track vehiculo.id; let i = $index) {
+          <mat-card class="vehicle-card" appearance="outlined">
+            <div class="card-image-wrapper">
+              <img
+                mat-card-image
+                [src]="getImagen(i)"
+                alt="Imagen de {{ vehiculo.modelo }}"
+                class="vehicle-img"
+                loading="lazy"
+              />
+              <span class="card-floating-badge">{{ getMarcaNombre(vehiculo.catMarcaId) }}</span>
+            </div>
+
+            <mat-card-header>
+              <div mat-card-avatar class="card-avatar">
+                <mat-icon>directions_car</mat-icon>
+              </div>
+              <mat-card-title class="card-title">{{ vehiculo.modelo }}</mat-card-title>
+              <mat-card-subtitle class="card-subtitle">
+                Año de fabricación: {{ vehiculo.year }}
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="card-content">
+              <div class="chips-row">
+                <span class="info-pill year-pill">
+                  <mat-icon>calendar_today</mat-icon>
+                  {{ vehiculo.year }}
+                </span>
+                <span class="info-pill brand-pill">
+                  <mat-icon>sell</mat-icon>
+                  {{ getMarcaNombre(vehiculo.catMarcaId) }}
+                </span>
+                <span class="info-pill id-pill">
+                  <mat-icon>tag</mat-icon>
+                  ID: {{ vehiculo.id }}
+                </span>
+              </div>
+            </mat-card-content>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-actions class="card-actions" align="end">
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="editarVehiculo(vehiculo.id)"
+                class="action-btn"
+              >
+                <mat-icon>edit</mat-icon>
+                Editar
+              </button>
+              <button
+                mat-flat-button
+                color="warn"
+                (click)="eliminarVehiculo(vehiculo.id)"
+                class="action-btn delete-btn"
+              >
+                <mat-icon>delete</mat-icon>
+                Eliminar
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+
+    <!-- Sección Galería de Imágenes Destacadas -->
+    <section class="gallery-section">
+      <div class="gallery-header">
+        <mat-icon class="gallery-icon">photo_library</mat-icon>
+        <div>
+          <h3>Galería de Modelos Destacados</h3>
+          <p>Explora la selección de vehículos y detalles automotrices</p>
+        </div>
+      </div>
+
+      <div class="gallery-grid">
+        @for (foto of imagenes; track $index) {
+          <div class="gallery-card">
+            <img [src]="foto" alt="Auto en exhibición {{ $index + 1 }}" loading="lazy" />
+            <div class="gallery-overlay">
+              <span>Modelo #{{ $index + 1 }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+</div>
