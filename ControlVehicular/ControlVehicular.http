@@ -1,0 +1,107 @@
+@ControlVehicular_HostAddress = http://localhost:5030
+
+GET {{ControlVehicular_HostAddress}}/api/catalogos/marcas
+Accept: application/json
+
+###
+
+GET {{ControlVehicular_HostAddress}}/api/catalogos/marcas/1
+Accept: application/json
+
+###
+
+POST {{ControlVehicular_HostAddress}}/api/catalogos/marcas
+Content-Type: application/json
+
+{
+  "marca": "Toyota"
+}
+
+###
+
+PUT {{ControlVehicular_HostAddress}}/api/catalogos/marcas/1
+Content-Type: application/json
+
+{
+  "marca": "Toyota Motors"
+}
+
+###
+
+DELETE {{ControlVehicular_HostAddress}}/api/catalogos/marcas/1
+
+###
+
+GET {{ControlVehicular_HostAddress}}/api/vehiculos
+Accept: application/json
+
+###
+
+GET {{ControlVehicular_HostAddress}}/api/vehiculos/1
+Accept: application/json
+
+###
+
+POST {{ControlVehicular_HostAddress}}/api/vehiculos
+Content-Type: application/json
+
+{
+  "modelo": "Corolla",
+  "year": "2024",
+  "catMarcaId": 1
+}
+
+###
+
+PUT {{ControlVehicular_HostAddress}}/api/vehiculos/1
+Content-Type: application/json
+
+{
+  "modelo": "Corolla Cross",
+  "year": "2025",
+  "catMarcaId": 1
+}
+
+###
+
+DELETE {{ControlVehicular_HostAddress}}/api/vehiculos/1
+
+###
+
+GET {{ControlVehicular_HostAddress}}/api/responsables
+Accept: application/json
+
+###
+
+GET {{ControlVehicular_HostAddress}}/api/responsables/1
+Accept: application/json
+
+###
+
+POST {{ControlVehicular_HostAddress}}/api/responsables
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "primerApellido": "Perez",
+  "segundoApellido": "Lopez",
+  "celular": "5512345678"
+}
+
+###
+
+PUT {{ControlVehicular_HostAddress}}/api/responsables/1
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "primerApellido": "Perez",
+  "segundoApellido": null,
+  "celular": "5587654321"
+}
+
+###
+
+DELETE {{ControlVehicular_HostAddress}}/api/responsables/1
+
+###
